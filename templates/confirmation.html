@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Booking Confirmed | World Hotels</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --bg-slate: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg-slate);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .receipt-container {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .receipt-header {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .receipt-header img {
+            height: 45px;
+            margin-bottom: 20px;
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-radius: 50%;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .receipt-body {
+            padding: 40px;
+        }
+
+        .receipt-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .receipt-subtitle {
+            color: #64748b;
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            color: var(--primary);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .total-section {
+            background: #f1f5f9;
+            margin: 20px -40px -40px;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 80px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        @media print {
+            .action-buttons, .navbar { display: none !important; }
+            body { background: white; padding: 0; }
+            .receipt-container { box-shadow: none; border: 1px solid #eee; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="World Hotels Logo">
+            <div class="success-badge">✔</div>
+        </div>
+
+        <div class="receipt-body">
+            <h2 class="receipt-title">Booking Confirmed</h2>
+            <p class="receipt-subtitle">Your luxury stay at WH {{ city }} is secured.</p>
+
+            <div class="detail-row">
+                <span class="detail-label">Destination</span>
+                <span class="detail-value">{{ city }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Room Category</span>
+                <span class="detail-value">{{ room }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Check-in Date</span>
+                <span class="detail-value">{{ date }}</span>
+            </div>
+            <div class="detail-row" style="border-bottom: none;">
+                <span class="detail-label">Status</span>
+                <span class="detail-value" style="color: #10b981;">Guaranteed</span>
+            </div>
+
+            <div class="total-section">
+                <span class="total-label">Grand Total</span>
+                <span class="total-amount">{{ "{:,.2f}".format(total) }} {{ currency }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons" style="position: absolute; bottom: 40px; width: 100%; max-width: 550px;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Explore</a>
+        <button onclick="window.print()" class="btn btn-outline">Download Receipt</button>
+    </div>
+
+</body>
+</html>

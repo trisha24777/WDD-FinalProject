@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings | World Hotels{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 60px;">
+    <div class="section-header">
+        <h2>Your Journey History</h2>
+        <p>Review and manage your past and upcoming luxury stays.</p>
+    </div>
+
+    {% if not bookings %}
+        <div style="text-align: center; padding: 100px 0;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🛎️</div>
+            <h3>No bookings found</h3>
+            <p>You haven't planned any trips yet. <a href="/" style="color: var(--accent);">Start exploring destinations.</a></p>
+        </div>
+    {% else %}
+        <div class="compact-grid">
+            {% for b in bookings %}
+            <div class="hotel-card compact-card">
+                <div class="card-img-wrapper">
+                    <img src="{{ b.image_url }}" alt="{{ b.city_name }}">
+                    <div class="price-tag">{{ "{:,.2f}".format(b.total_price) }} {{ session.get('currency', 'GBP') }}</div>
+                </div>
+                <div class="card-content">
+                    <h3>{{ b.city_name }}</h3>
+                    <p style="margin-bottom: 8px;"><strong>Room:</strong> {{ b.room_type }}</p>
+                    <p style="margin-bottom: 15px;"><strong>Check-in:</strong> {{ b.check_in }}</p>
+                    
+                    <div style="background: #f1f5f9; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 0.8rem;">
+                        {% if b.can_cancel %}
+                            <span style="color: #10b981; font-weight: 600;">✓ Refundable</span><br>
+                            <span style="color: #64748b;">Cancellation Fee: {{ "{:,.2f}".format(b.cancel_fee) }} {{ session.get('currency', 'GBP') }}</span>
+                        {% else %}
+                            <span style="color: #ef4444; font-weight: 600;">⚠ Non-Refundable</span><br>
+                            <span style="color: #64748b;">Full charge applies</span>
+                        {% endif %}
+                    </div>
+
+                    {% if b.can_cancel %}
+                        <form action="{{ url_for('cancel_booking', booking_id=b.booking_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel? A fee of {{ b.cancel_fee }} {{ session.get('currency', 'GBP') }} may apply.')">
+                            <button type="submit" class="btn-select cancel-btn">Cancel Booking</button>
+                        </form>
+                    {% else %}
+                        <button class="btn-select disabled-btn" disabled>Unavailable</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

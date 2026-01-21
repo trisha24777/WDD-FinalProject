@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="hero">
+    <div class="hero-content">
+        <h1>Redefining <br>Luxury Travel</h1>
+        <p class="slogan">Handpicked destinations for the modern explorer.</p>
+        <div class="hero-cta">
+            <a href="#destinations" class="btn-hero btn-hero-primary">Explore Hotels</a>
+            <a href="#features" class="btn-hero btn-hero-secondary">Our Story</a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Booking Form -->
+    <form class="booking-glass-form" action="/book" method="POST" id="mainBookingForm">
+        <div class="form-row">
+            <div class="input-group">
+                <label>Select Destination</label>
+                <select name="hotel_id" id="hotelSelect" required>
+                    <option value="" disabled selected>Choose your sanctuary...</option>
+                    {% for h in hotels %}
+                        <option value="{{ h.id }}" {% if not h.available %}disabled{% endif %}>
+                            {{ h.city }} ({{ h.base_rate }} {{ currency }}) {% if not h.available %}[FULL]{% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Arrival Date</label>
+                <input type="date" name="check_in" id="check_in_booking" required>
+            </div>
+            <div class="input-group">
+                <label>Stay Duration</label>
+                <input type="number" name="duration" min="1" max="30" value="1" placeholder="Nights" required>
+            </div>
+            <div class="input-group">
+                <label>Accommodation</label>
+                <select name="room_type">
+                    <option value="Standard">Standard Suite</option>
+                    <option value="Double">Double Deluxe (+20%)</option>
+                    <option value="Family">Grand Family (+50%)</option>
+                </select>
+            </div>
+            {% if session.get('admin') %}
+                <button type="button" class="btn-reserve disabled-mode" disabled>Management Mode</button>
+            {% else %}
+                <button type="submit" class="btn-reserve">Confirm Reservation</button>
+            {% endif %}
+        </div>
+    </form>
+
+    <div class="section-header reveal" id="destinations">
+        <h2>Our Destinations</h2>
+        <p>From the historic streets of London to the neon lights of Tokyo, discover our curated collection of world-class hotels.</p>
+    </div>
+    
+    <div class="hotel-grid">
+        {% for h in hotels %}
+        <div class="hotel-card reveal {{ 'unavailable' if not h.available }}">
+            <div class="card-img-wrapper">
+                {% if not h.available %}
+                    <div class="sold-out-overlay">Sold Out</div>
+                {% endif %}
+                <img src="{{ h.image }}" alt="{{ h.city }}">
+                <div class="price-tag">From {{ h.base_rate }} {{ currency }}</div>
+            </div>
+            <div class="card-content">
+                <h3>{{ h.city }}</h3>
+                <p>Experience world-class service and breathtaking views in the heart of {{ h.city }}.</p>
+                
+                {% if h.available %}
+                    {% if session.get('admin') %}
+                        <button class="btn-select disabled-mode" disabled>Management View</button>
+                    {% else %}
+                        <button class="btn-select" onclick="selectHotel('{{ h.id }}')">Book This Destination</button>
+                    {% endif %}
+                {% else %}
+                    <button class="btn-select disabled-mode" disabled>Fully Booked</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2>The World Hotels Experience</h2>
+            <p>We provide more than just a place to sleep. We provide memories that last a lifetime.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <div class="feature-icon">💎</div>
+                <h3>Curated Luxury</h3>
+                <p>Every hotel in our portfolio meets the highest standards of excellence and design.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🌍</div>
+                <h3>Global Reach</h3>
+                <p>Connect with the culture and soul of the world's most vibrant metropolitan cities.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🛡️</div>
+                <h3>Total Security</h3>
+                <p>Your privacy and security are our top priorities, from booking to checkout.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="testimonials-section reveal">
+    <div class="container">
+        <div class="testimonial-card">
+            <p class="testimonial-text">"The most seamless booking experience I've ever had. Their attention to detail in every city is unmatched."</p>
+            <div class="testimonial-author">— James Arther, Global Explorer</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

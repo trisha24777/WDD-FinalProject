@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>{% block title %}World Hotels | Exclusive Luxury Stays{% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            <a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="World Hotels Logo" style="height: 50px;"></a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            {% if session.get('user') %}
+                <a href="/user/bookings">My Bookings</a>
+            {% endif %}
+            <a href="/#destinations">Destinations</a>
+            
+            <div class="dropdown" style="display: inline-block; margin-left: 20px;">
+                <button class="btn-nav" style="border: none; background: transparent; cursor: pointer;">
+                    {{ session.get('currency', 'GBP') }} ▾
+                </button>
+                <div class="dropdown-content">
+                    <a href="/set_currency/GBP">GBP</a>
+                    <a href="/set_currency/USD">USD</a>
+                    <a href="/set_currency/EUR">EUR</a>
+                    <a href="/set_currency/NPR">NPR</a>
+                </div>
+            </div>
+
+            {% if session.get('admin') %}
+                <a href="/admin/dashboard" style="color: var(--accent); font-weight: 600;">Dashboard</a>
+            {% endif %}
+
+            {% if session.get('user') or session.get('admin') %}
+                <span class="user-greet"><strong>👋Hi, {{ session.get('user', 'Admin') }}</strong></span>
+                <a href="/logout" class="btn-nav logout-btn">Logout</a>
+            {% else %}
+                <a href="/user/login">Sign In</a>
+                <a href="/admin/login" class="btn-nav">Admin Access</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h2>WORLD HOTELS</h2>
+                    <p>Luxury redefined for the modern traveler. Experience the world like never before.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/#destinations">Destinations</a></li>
+                        <li><a href="/#features">Experience</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Admin</h4>
+                    <ul>
+                        <li><a href="/admin/login">Staff Login</a></li>
+                        <li><a href="/admin/dashboard">Management</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 World Hotels International. All rights reserved. Designed for Excellence.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WH Admin | Staff Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/admin_login.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page admin-auth">
+    <div class="auth-overlay">
+        <div class="auth-card">
+        <div class="auth-header">
+            <a href="/" class="auth-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="World Hotels Logo">
+            </a>
+            <h2>Staff Access</h2>
+            <p>Internal Management Portal.</p>
+        </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; border: 1px solid #fecaca; text-align: center;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="/admin/login" method="POST" class="auth-form">
+                <div class="input-group">
+                    <label>Admin ID</label>
+                    <input type="text" name="admin_id" required placeholder="Enter Staff ID">
+                </div>
+
+                <div class="input-group">
+                    <label>Security Key</label>
+                    <input type="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="auth-btn">Authorize & Enter</button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="/">← Return to Public Website</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

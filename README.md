@@ -2,6 +2,10 @@
 
 A Flask-based web application for browsing hotels, calculating dynamic pricing, and managing bookings. This project features user authentication and an administrative dashboard.
 
+## Demo
+
+https://github.com/user-attachments/assets/5830220b-a89b-4505-9ac8-754c6495579a
+
 ## 🚀 Features
 
 ### For Users:

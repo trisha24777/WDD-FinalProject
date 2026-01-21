@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W:: World Hotels | Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/user_login.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+    <div class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="/" class="auth-logo"><img src="{{ url_for('static', filename='images/logo.png') }}"/></a>
+                <h2>{% if mode == 'login' %}Welcome Back{% else %}Join the Elite{% endif %}</h2>
+                <p>{% if mode == 'login' %}Please enter your credentials to access your bookings.{% else %}Create an account to start your luxury journey.{% endif %}</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; border: 1px solid #fecaca; text-align: center;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{% if mode == 'login' %}/user/login{% else %}/user/signup{% endif %}" method="POST" class="auth-form">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Enter your username">
+                </div>
+
+                {% if mode == 'signup' %}
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="name@example.com">
+                </div>
+                {% endif %}
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="auth-btn">
+                    {% if mode == 'login' %}Sign In{% else %}Create Account{% endif %}
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                {% if mode == 'login' %}
+                    <span>New to World Hotels?</span> <a href="/user/signup">Create an account</a>
+                {% else %}
+                    <span>Already a member?</span> <a href="/user/login">Sign in here</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
